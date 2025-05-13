@@ -61,6 +61,7 @@ class UserAuthViewSet(viewsets.GenericViewSet):
                 serializer = self.get_serializer(queryset, many=True)
             else:
                 serializer = self.get_serializer(request.user)
+                print(serializer.data)
             return custom_response(
                 data=serializer.data,
                 message="Success",

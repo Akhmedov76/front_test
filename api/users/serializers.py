@@ -10,7 +10,6 @@ class UserAuthSerializer(serializers.ModelSerializer):
         model = UserAuth
         fields = ('id', 'name', 'email', 'key', 'secret', 'password')
         extra_kwargs = {
-            'secret': {'write_only': True},
             'password': {'write_only': True}
         }
 
