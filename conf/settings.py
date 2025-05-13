@@ -1,10 +1,10 @@
 import os
-from pathlib import Path
 from datetime import timedelta
-from dotenv import load_dotenv
+from pathlib import Path
 from pathlib import Path
 
 from django.conf import settings
+from dotenv import load_dotenv
 
 from api import users
 
@@ -141,6 +141,7 @@ REST_FRAMEWORK = {
         # "rest_framework.permissions.IsAuthenticated",
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
+        'api.users.authentication.APIKeyAuthentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication',
         'rest_framework.authentication.SessionAuthentication'
     ],
