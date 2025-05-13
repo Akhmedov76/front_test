@@ -1,21 +1,25 @@
-from rest_framework.views import APIView
+from drf_yasg.utils import swagger_auto_schema
+from rest_framework import viewsets, status
+from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
-from rest_framework import status
+
 from .models import UserAuth
 from .serializers import UserAuthSerializer
 
 
-class SignupView(APIView):
-    def post(self, request):
-        serializer = UserAuthSerializer(data=request.data)
-        if serializer.is_valid():
+class UserAuthViewSet(viewsets.ModelViewSet):
+    queryset = UserAuth.objects.all()
+    serializer_class = UserAuthSerializer
+    permission_classes = [IsAuthenticated]
+
+    @swagger_auto_schema(query_serializer=UserAuthSerializer)
+    @action(detail=False, methods=['POST'], url_path="signup", permission_classes=[AllowAny])
+    def user_signup(self, request):
+        try:
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
             serializer.save()
-            return Response({
-                "data": serializer.data,
-                "isOk": True,
-                "message": "ok"
-            }, status=status.HTTP_200_OK)
-        return Response({
-            "isOk": False,
-            "message": serializer.errors
-        }, status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
