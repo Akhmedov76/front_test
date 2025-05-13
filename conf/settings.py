@@ -6,6 +6,8 @@ from pathlib import Path
 
 from django.conf import settings
 
+from api import users
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(os.path.join(BASE_DIR, '.env'))
 
@@ -100,7 +102,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
     {
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    }
 ]
 
 # Internationalization
