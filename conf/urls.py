@@ -7,7 +7,7 @@ from conf.swagger import schema_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/v1/', include('api.users.urls')),
+    path('auth/', include('api.users.urls')),
     path('api/v1/docs/', schema_view.with_ui('swagger', cache_timeout=0), name='api_docs'),
 ]
 
