@@ -45,8 +45,7 @@ class BookViewSet(viewsets.ModelViewSet):
             "message": "ok"
         }, status=status.HTTP_200_OK)
 
-    #
-    # @swagger_auto_schema(request_body=BookSerializer)
+    #    # @swagger_auto_schema(request_body=BookSerializer)
     # @action(detail=False, methods=['POST'])
     # def create_books(self, request):
     #     isbn = request.data.get('isbn')
