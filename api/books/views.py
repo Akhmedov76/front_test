@@ -58,3 +58,18 @@ class BookViewSet(viewsets.GenericViewSet):
 
         serializer = self.get_serializer(books, many=True)
         return Response(serializer.data)
+
+    @action(detail=False, methods=['GET'])
+    def get_all_books(self, request):
+        key = request.headers.get('Key')
+        sign = request.headers.get('Sign')
+
+        if not key or not sign:
+            return Response(
+                {"error": "Key and Sign headers are required"},
+                status=status.HTTP_401_UNAUTHORIZED
+            )
+
+        books = self.get_queryset()
+        serializer = self.get_serializer(books, many=True)
+        return Response(serializer.data)
