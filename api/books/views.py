@@ -32,5 +32,29 @@ class BookViewSet(viewsets.GenericViewSet):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    # @action(detail=False, methods=['GET'])
-    # def search_book(self,request):
+    @action(detail=False, methods=['GET'], url_path='(?P<title>.*)')
+    def search_by_title(self, request, title=None):
+        key = request.headers.get('Key')
+        sign = request.headers.get('Sign')
+
+        if not key or not sign:
+            return Response(
+                {"error": "Key and Sign headers are required"},
+                status=status.HTTP_401_UNAUTHORIZED
+            )
+
+        if not title:
+            return Response(
+                {"error": "Title parameter is required"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        books = Book.objects.filter(title__icontains=title)
+        if not books.exists():
+            return Response(
+                {"error": "No books found with this title"},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        serializer = self.get_serializer(books, many=True)
+        return Response(serializer.data)
