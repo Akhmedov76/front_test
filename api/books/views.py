@@ -73,3 +73,33 @@ class BookViewSet(viewsets.GenericViewSet):
         books = self.get_queryset()
         serializer = self.get_serializer(books, many=True)
         return Response(serializer.data)
+
+    @action(detail=True, methods=['PATCH'])
+    def update_book_status(self, request, pk=None):
+        key = request.headers.get('Key')
+        sign = request.headers.get('Sign')
+        new_status = request.data.get('status')
+
+        if not key or not sign:
+            return Response(
+                {"error": "Key and Sign headers are required"},
+                status=status.HTTP_401_UNAUTHORIZED
+            )
+
+        if not isinstance(new_status, int) or new_status not in [0, 1, 2]:
+            return Response(
+                {"error": "Status must be 0 (New), 1 (Reading), or 2 (Finished)"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        try:
+            book = Book.objects.get(id=pk)
+            book.status = new_status
+            book.save()
+            serializer = self.get_serializer(book)
+            return Response(serializer.data)
+        except Book.DoesNotExist:
+            return Response(
+                {"error": "Book not found"},
+                status=status.HTTP_404_NOT_FOUND
+            )
