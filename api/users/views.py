@@ -4,7 +4,7 @@ from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated, AllowAny
 
-from api.users.auth import custom_response
+from api.base.auth import custom_response
 from .models import UserAuth
 from .serializers import UserAuthSerializer
 

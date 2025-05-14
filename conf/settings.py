@@ -141,7 +141,7 @@ REST_FRAMEWORK = {
         # "rest_framework.permissions.IsAuthenticated",
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'api.users.authentication.APIKeyAuthentication',
+        'api.base.authentication.APIKeyAuthentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication',
         'rest_framework.authentication.SessionAuthentication'
     ],
