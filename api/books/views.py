@@ -74,7 +74,7 @@ class BookViewSet(viewsets.GenericViewSet):
         serializer = self.get_serializer(books, many=True)
         return Response(serializer.data)
 
-    @action(detail=True, methods=['PATCH'])
+    @action(detail=True, methods=['PATCH'], url_path='Update')
     def update_book_status(self, request, pk=None):
         key = request.headers.get('Key')
         sign = request.headers.get('Sign')
@@ -98,6 +98,27 @@ class BookViewSet(viewsets.GenericViewSet):
             book.save()
             serializer = self.get_serializer(book)
             return Response(serializer.data)
+        except Book.DoesNotExist:
+            return Response(
+                {"error": "Book not found"},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+    @action(detail=True, methods=['DELETE'], url_path='remove')  # url_path ni o'zgartirdim
+    def delete_book(self, request, pk=None):
+        key = request.headers.get('Key')
+        sign = request.headers.get('Sign')
+
+        if not key or not sign:
+            return Response(
+                {"error": "Key and Sign headers are required"},
+                status=status.HTTP_401_UNAUTHORIZED
+            )
+
+        try:
+            book = Book.objects.get(id=pk)
+            book.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
         except Book.DoesNotExist:
             return Response(
                 {"error": "Book not found"},
